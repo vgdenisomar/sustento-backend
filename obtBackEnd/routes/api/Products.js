@@ -6,34 +6,19 @@ var ObjectID = require('mongodb').ObjectID;
 function ProductsInit(db){
 
 
-var  ProductsColl = db.collection('products');
-
-var  UserColl = db.collection('users');
-
-
-var ProductsCollection = [];
-
-var ProductsStruct = {
-  "nombre_Product":'',
-  "descripcion": '',
-  "Precio_Original":0,
-  "Precio_Oferta":0,
-  "Cantidad_Producto":0,
-  "Fecha_Vencimiento_Prod":Date
-};
-
-
-
 
 
 router.get('/', (req, res, next)=>{
   var id = new ObjectID(req.params.id);
-  ProductsColl.find().toArray((err, things)=>{
-    if(err) return res.status(200).json([]);
-    return res.status(200).json(things);
+  var sql = 'SELECT * FROM productos';
+  db.query(sql, function(err, lista) {
+    if (err){
+      return res.status(200).json([])
+    }
+    return res.status(200).json(lista);
   });
 });
-
+/*
 router.get('/perfil', (req, res, next)=>{
   var query = {"_id": new ObjectID(req.user._id)}
   UserColl.find(query).toArray((err, things)=>{
@@ -134,7 +119,7 @@ router.delete('/:id', (req, res, next) => {
     }
     return res.status(200).json(result);
   });
-});
+});*/
 
  return router;
 }

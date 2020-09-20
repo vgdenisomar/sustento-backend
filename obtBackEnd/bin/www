@@ -3,19 +3,23 @@
 /**
  * Module dependencies.
  */
-var MongoClient = require('mongodb').MongoClient;
-var MongoUri = 'mongodb://localhost:27017';
-var MongoDb = 'sw201902';
-var MongoOption = { useNewUrlParser: true };
+var mysql      = require('mysql');
+var MysqlDb = 'sustento';
+var connection = mysql.createConnection({
+    host     : 'sustentopro.ca0hed6roeqj.us-east-2.rds.amazonaws.com',
+    database : 'sustento',
+    user     : 'master',
+    password : 'Sustento.2020',
+});
 
-MongoClient.connect(MongoUri, MongoOption, (err, conn) => {
+connection.connect(function(err) {
     if (err) {
         console.log(err);
         process.exit(1);
     } else {
-        console.log("Conección Exitosa a MongoDB");
+        console.log("Conección Exitosa a Mysql");
     }
-    var db = conn.db(MongoDb);
+    var db = connection;
 
     var app = require('../app')(db);
     var debug = require('debug')('obtbackend:server');

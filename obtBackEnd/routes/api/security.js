@@ -30,11 +30,8 @@ function initSecurity (db){
               return next(null, false, { "Error": "Credenciales Incorrectas" });
             }
             //Ver si la cuenta está activa
-            if (!user.active) {
-              console.log("Tratando de Ingresar con cuenta suspendida " + email);
-              return next(null, false, { "Error": "Credenciales Incorrectas" });
-            }
-            if (!userModel.comparePasswords(pswd, user.password)) {
+            console.log(pswd);
+            if (!userModel.comparePasswords(pswd, user[0].contraCliente)) {
               console.log("Tratando de Ingresar con contraseña incorrecta " + email);
               return next(null, false, { "Error": "Credenciales Incorrectas" });
             }
@@ -43,7 +40,7 @@ function initSecurity (db){
             delete user.active;
             delete user.dateCreated;
 
-            return next(null, user, { "Status": "Ok" });
+            return next(null, JSON.stringify(user), { "Status": "Ok" });
           });
             //---
         }

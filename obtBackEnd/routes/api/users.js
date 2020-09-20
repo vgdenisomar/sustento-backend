@@ -2,24 +2,23 @@ var ObjectID = require('mongodb').ObjectID;
 var bcrypt = require('bcrypt');
 
 module.exports = function(db){
-  var userColl = db.collection('users');
   var userModel = {}
 
   //Obtiene el usuario por correo electrónico
   userModel.obtenerPorCorreo = function( email, handler) {
-    var query = {"email": email};
-    userColl.findOne(query, (err, user)=>{
-      if(err){
+    var sql = 'SELECT * FROM clientes WHERE emailCliente = "'+email+'"';
+    db.query(sql, function(err, user) {
+      if (err){
         console.log(err);
         return handler(err, null);
       }
       if(!user){
         return handler(new Error("No se encontró el usuario"), null);
-      }
+      } 
       return handler(null, user);
     });
   }
-
+/*
   //Ingresa un nuevo usuario a la colección de Usuario
   userModel.agregarNuevo = (name,email, password,tipo, handler) => {
     var newUser = Object.assign({}, {
@@ -89,10 +88,16 @@ module.exports = function(db){
   function genPassword(rawPassword){
     var hashedPassword = bcrypt.hashSync(rawPassword, 10);
     return hashedPassword;
-  }
+  }*/
 
   userModel.comparePasswords = (rawPassword, dbPassword)=>{
-    return bcrypt.compareSync(rawPassword, dbPassword);
+    if(rawPassword==dbPassword)
+    {
+      return true;
+    }
+    else{
+      return false;
+    }
   }
   return userModel;
 }
