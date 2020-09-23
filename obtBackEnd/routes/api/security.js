@@ -3,6 +3,7 @@ const express = require('express');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const jwt = require('jsonwebtoken');
+const { json } = require('express');
 
 var router = express.Router();
 
@@ -58,7 +59,8 @@ function initSecurity (db){
                 return res.status(400).json({"Error":"Error al iniciar sesión"});
               }
               const token = jwt.sign(user, 'cuandolosgatosnoestanlosratonesfiestahacen');
-              return res.status(200).json({user, token});
+              var userF=JSON.parse(user)
+              return res.status(200).json({userF, token});
             });
           }else{
             return res.status(400).json({info});
