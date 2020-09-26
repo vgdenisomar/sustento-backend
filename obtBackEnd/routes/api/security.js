@@ -19,19 +19,23 @@ function initSecurity (db){
           passwordField:'password'
         },
         (email, pswd, next)=>{
+          console.log(email);
+          console.log(pswd);
             //--
           if ((email ||'na') === 'na' || (pswd ||'na') == 'na') {
             console.log("Valores de correo y contraseña no vienen");
             return next(null, false, {"Error":"Credenciales Incorrectas"});
           }
+          
           userModel.obtenerPorCorreo(email, (err, user) => {
+           
             if (err) {
               console.log(err);
               console.log("Tratando de Ingresar con cuenta inexistente " + email);
               return next(null, false, { "Error": "Credenciales Incorrectas" });
             }
             //Ver si la cuenta está activa
-            console.log(pswd);
+            
             if (!userModel.comparePasswords(pswd, user[0].contraCliente)) {
               console.log("Tratando de Ingresar con contraseña incorrecta " + email);
               return next(null, false, { "Error": "Credenciales Incorrectas" });
@@ -63,6 +67,7 @@ function initSecurity (db){
               return res.status(200).json({userF, token});
             });
           }else{
+           //console.log(email,password);
             return res.status(400).json({info});
           }
         }

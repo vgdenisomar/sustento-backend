@@ -9,11 +9,18 @@ module.exports = function(db){
     var sql = 'SELECT * FROM clientes WHERE emailCliente = "'+email+'"';
     db.query(sql, function(err, user) {
       if (err){
-        console.log(err);
+        
         return handler(err, null);
       }
-      if(!user){
+      if(user.length != 1)
+      {
+       
         return handler(new Error("No se encontró el usuario"), null);
+      }
+      if(!user){
+        
+        return handler(new Error("No se encontró el usuario"), null);
+        
       } 
       return handler(null, user);
     });
