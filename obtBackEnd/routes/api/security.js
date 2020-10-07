@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require('express'), cors = require('cors');
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -51,6 +51,8 @@ function initSecurity (db){
         }
       )
   );
+
+  router.use(cors());
 
   router.post('/login', (req, res, next)=>{
     passport.authenticate(
