@@ -8,9 +8,8 @@ function ProductsInit(db){
 
 
 
-router.get('/', (req, res, next)=>{
-  var id = new ObjectID(req.params.id);
-  var sql = 'SELECT * FROM productos';
+router.post('/', (req, res, next)=>{
+  var sql = 'SELECT * FROM productos where codProveedor="'+req.body.codProveedor+'"';
   db.query(sql, function(err, lista) {
     if (err){
       return res.status(200).json([])
