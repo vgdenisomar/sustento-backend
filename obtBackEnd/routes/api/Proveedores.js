@@ -3,13 +3,14 @@ var router = express.Router();
 
 function ProveedoresInit(db){
 
-    router.get('/', (req, res, next)=>{
-      var sql = 'SELECT * FROM proveedores';
+    router.post('/', (req, res, next)=>{
+      console.log(req.body);
+      var sql = 'call sustento.sp_retorna_proveedores('+req.body.codCliente+')';
       db.query(sql, function(err, lista) {
         if (err){
           return res.status(200).json([])
         }
-        return res.status(200).json(lista);
+        return res.status(200).json(lista[0]);
       });
     });
     /*

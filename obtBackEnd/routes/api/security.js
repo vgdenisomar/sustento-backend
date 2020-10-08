@@ -16,9 +16,9 @@ function initSecurity (db){
       new LocalStrategy(
         {
           usernameField:'email',
-          passwordField:'password'
+          passwordField:'password',
         },
-        (email, pswd, next)=>{
+        (email,pswd,next)=>{
           console.log(email);
           console.log(pswd);
             //--
@@ -66,6 +66,12 @@ function initSecurity (db){
               }
               const token = jwt.sign(user, 'cuandolosgatosnoestanlosratonesfiestahacen');
               var userF=JSON.parse(user)
+              userModel.actualizaUsuario(userF[0].codCliente,req.body.longitud, req.body.latitud, (err, resultado)=>{
+                if(err){
+                  console.log(err);
+                }
+                console.log(resultado);
+              });
               return res.status(200).json({userF, token});
             });
           }else{

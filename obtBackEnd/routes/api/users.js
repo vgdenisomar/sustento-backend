@@ -21,10 +21,23 @@ module.exports = function(db){
         
         return handler(new Error("No se encontró el usuario"), null);
         
-      } 
+      }
+
       return handler(null, user);
     });
   }
+    //Actualiza ubicacion de usuario
+    userModel.actualizaUsuario = function( codCliente, longitud,latitud, handler) {
+      var sql = 'UPDATE clientes SET latitud = "'+latitud+'", longitud="'+longitud+'" WHERE codCliente = "'+codCliente+'"';
+      db.query(sql, function(err, result) {
+        if (err){
+          
+          return handler(err, null);
+        }
+  
+        return handler(null, result.affectedRows);
+      });
+    }
 /*
   //Ingresa un nuevo usuario a la colección de Usuario
   userModel.agregarNuevo = (name,email, password,tipo, handler) => {
