@@ -26,6 +26,25 @@ module.exports = function(db){
       return handler(null, user);
     });
   }
+
+  //buscar correo para la creacion de usuario
+  userModel.verificarCorreo = function( email, handler) {
+    var sql = 'SELECT * FROM clientes WHERE emailCliente = "'+email+'"';
+    db.query(sql, function(err, user) {
+      if (err){
+        
+        return handler(err, null);
+      }
+      if(user.length > 0)
+      {
+       
+        return handler(new Error("Usuario ya existente"), null);
+      }
+
+      return handler (null, user);
+       
+    });
+  }
     //Actualiza ubicacion de usuario
     userModel.actualizaUsuario = function( codCliente, longitud,latitud, handler) {
       var sql = 'UPDATE clientes SET latitud = "'+latitud+'", longitud="'+longitud+'" WHERE codCliente = "'+codCliente+'"';
@@ -38,33 +57,20 @@ module.exports = function(db){
         return handler(null, result.affectedRows);
       });
     }
-/*
+
   //Ingresa un nuevo usuario a la colección de Usuario
-  userModel.agregarNuevo = (name,email, password,tipo, handler) => {
-    var newUser = Object.assign({}, {
-      name:name,
-      email:email,
-      password: genPassword(password),
-      dateCreated: new Date().getTime(),
-      active: true,
-      user:tipo,
-      qr:"https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl=otpauth%3A%2F%2Ftotp%2FGoogle+Autenticador%3Fsecret%3DHS4OI2GFLJ54EJ7X%26issuer%3Dhttp%253A%252F%252Flocalhost%252Fgoogle-authenticator%252F",
-      lastPasswords:[],
-      roles:["public"]
-      }
-      );
-    userColl.insertOne(newUser, (err, result)=>{
+  userModel.agregarNuevo = (name, email, password, handler) => {
+    var query = "INSERT INTO clientes (nomCliente,emailCliente,contraCliente,admin) VALUES (?,?,?,?);";
+    db.query(query,[name, email,password,0], function (err,rs){
       if(err){
-        console.log(err);
         return handler(err, null);
       }
-      if(result.insertedCount == 0){
-        return handler(new Error("No se guardo el usuario"), null);
-      }
-      return handler(null, result.ops[0]);
-    })
-  } // agregarNuevo
+      return handler(null, rs.affectedRows);
 
+    });
+  } 
+
+  /*
   userModel.changePassword = (email, newPassword, handler) => {
     var query = {email: email};
     var projection = {"password":1, "active":1, "lastPasswords":1};
