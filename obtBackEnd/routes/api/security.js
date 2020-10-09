@@ -86,16 +86,9 @@ function initSecurity (db){
     var name = req.body.name || 'na';
     var email = req.body.email || 'na';
     var pswd = req.body.password || 'na';
-    if(req.body.tipo=="true")
-    {
-      var tipo = true;
-    }
-    else{
-      var tipo = false;
-    }
 
-    if( name==='na' || email ==='na' || pswd == 'na') {
-      return res.status(400).json({"Error":"El nombre,El correo y la contreseña son necesarios"});
+    if(name === 'na' || email ==='na' || pswd == 'na') {
+      return res.status(400).json({"Error":"El nombre, El correo y la contreseña son necesarios"});
     }
     if (!(/^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i).test(email)) {
       return res.status(400).json({ "Error": "El correo electrónico debe ser uno válido" });
@@ -103,13 +96,23 @@ function initSecurity (db){
     if (! (/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%])[0-9A-Za-z\.!@#$%]{8,32}$/).test(pswd)){
       return res.status(400).json({ "Error": "La contraseña debe contener al menos una Mayúscula, una Minúscula, un número y un signo especial ! @ # $ % y mínimo 8 caracteres" });
     }
-    userModel.agregarNuevo(name,email, pswd, tipo, (err, newUser)=>{
-      if(err){
-        return res.status(400).json({ "Error": "No se pudo crear nueva cuenta" });
+    
+    userModel.verificarCorreo(email, (err, user) => {
+           
+      if (err) {
+        console.log("Tratando de Ingresar  cuenta existente " + email);
+        return res.status(400).json({ "Error": "Usuario Existente"});
       }
-      delete newUser.password;
-      return res.status(200).json(newUser);
+      userModel.agregarNuevo(name, email, pswd, (err, newUser)=>{
+        if(err){
+          return res.status(400).json({ "Error": "No se pudo crear nueva cuenta" });
+        }
+        delete newUser.password;
+        return res.status(200).json(newUser);
+      })
+    
     });
+    
   }); // signin
 
   return router;
