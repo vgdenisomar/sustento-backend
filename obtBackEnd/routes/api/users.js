@@ -65,6 +65,7 @@ module.exports = function(db){
       if(err){
         return handler(err, null);
       }
+      console.log(rs);
       return handler(null, rs.affectedRows);
 
     });
