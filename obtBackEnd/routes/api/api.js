@@ -26,6 +26,7 @@ const securityApi = require('./security')(db);
 const productsApi = require('./Products')(db);
 const proveedoresApi = require('./Proveedores')(db);
 const carritoApi = require('./Carrito')(db);
+const donacionesApi = require('./Donaciones')(db);
 
 /*const carApi = require('./car')(db);
 const pedidosApi = require('./pedidos')(db);*/
@@ -43,6 +44,8 @@ router.use('/security', securityApi);
 router.use('/Products', passport.authenticate('jwt', {session:false}) , productsApi);
 router.use('/Proveedores', passport.authenticate('jwt', {session:false}) , proveedoresApi);
 router.use('/Carrito', passport.authenticate('jwt', {session:false}) , carritoApi);
+router.use('/Donaciones', passport.authenticate('jwt', {session:false}) , donacionesApi);
+
 /*router.use('/car', passport.authenticate('jwt', {session:false}) , carApi);
 router.use('/pedidos', passport.authenticate('jwt', {session:false}) , pedidosApi);*/
 

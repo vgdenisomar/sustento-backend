@@ -15,7 +15,7 @@ router.post('/agregar', (req, res, next)=>{
 });
 
 router.post('/verCarrito', (req, res, next)=>{
-  var queryCarrito = 'SELECT b.nomProd,b.precioProd, b.precioOfProd,(b.precioProd-b.precioOfProd) as oferta , a.cantidad, (b.precioOfProd * a.cantidad) as total from sustento.carTemp a INNER JOIN sustento.productos b ON a.codProd = b.codProd WHERE a.codCliente = "'+req.body.codCliente+'"';
+  var queryCarrito = 'SELECT b.codProd,b.nomProd,b.precioProd,b.imagenProd, b.precioOfProd,(b.precioProd-b.precioOfProd) as oferta , sum(a.cantidad) cantidad, (b.precioOfProd * sum(a.cantidad)) as total from sustento.carTemp a INNER JOIN sustento.productos b ON a.codProd = b.codProd WHERE a.codCliente = "'+req.body.codCliente+'" group by b.codProd';
   db.query(queryCarrito, function(err, result) {
     if (err){
       return res.status(200).json([err])
@@ -34,6 +34,17 @@ router.post('/actualizarTemporal', (req, res, next)=>{
     return res.status(200).json(result);
   });
 });
+
+router.post('/eliminarProducto', (req, res, next)=>{
+  var sql = 'DELETE FROM carTemp where codProd='+req.body.codProd+' and codCliente='+req.body.codCliente+'';
+  db.query(sql, function(err, result) {
+    if (err){
+      return res.status(200).json([])
+    }
+    return res.status(200).json(result);
+  });
+});
+
 
 router.post('/confirmarPedido', (req, res, next)=>{
   var queryPedido = 'INSERT INTO pedidos ( codCliente ) VALUES ('+req.body.codCliente+')';
